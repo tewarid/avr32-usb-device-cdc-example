@@ -88,11 +88,11 @@ ISR(usart_interrupt, USART_IRQ_GROUP, 3)
 
 void uart_rx_notify(uint8_t port)
 {
-	// If UART is open
-	if (USART->imr & AVR32_USART_IER_RXRDY_MASK) {
-		// Enable UART TX interrupt to send a new value
-		USART->ier = AVR32_USART_IER_TXRDY_MASK;
-	}
+//	// If UART is open
+//	if (USART->imr & AVR32_USART_IER_RXRDY_MASK) {
+//		// Enable UART TX interrupt to send a new value
+//		USART->ier = AVR32_USART_IER_TXRDY_MASK;
+//	}
 }
 
 
