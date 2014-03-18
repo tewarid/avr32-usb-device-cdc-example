@@ -52,7 +52,6 @@ static volatile bool main_b_cdc_enable = false;
  */
 int main(void)
 {
-	int value;
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
@@ -69,18 +68,24 @@ int main(void)
 
 	// The main loop manages only the power mode
 	// because the USB management is done by interrupt
+	int len;
+	const int BUF_SIZE = 10;
+	char buf[BUF_SIZE];
+	
 	while (true) {
 //		sleepmgr_enter_sleep();
 		if (udi_cdc_is_rx_ready()) {
-			value = udi_cdc_getc();
-			if (!udi_cdc_is_tx_ready()) {
+			
+			// blocks until BUF_SIZE bytes are received
+			len = udi_cdc_read_buf(buf, BUF_SIZE);
+			
+			if (len == BUF_SIZE) continue;
+			
+			while (!udi_cdc_is_tx_ready()) {
 				// Fifo full
-				udi_cdc_signal_overrun();
 			}
-			else
-			{
-				udi_cdc_putc(value);
-			}
+			
+			udi_cdc_write_buf(buf, BUF_SIZE);
 		}
 	}
 }
